@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AJIO-Style Fashion Store</title>
+
+  <!-- ===== CSS ===== -->
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: Arial, Helvetica, sans-serif; }
+
+    body { background: #f5f5f5; color: #222; }
+
+    /* Header */
+    header {
+      background: #fff;
+      padding: 15px 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    header h1 { font-size: 1.8rem; color: #111; }
+
+    nav a {
+      margin-left: 20px;
+      text-decoration: none;
+      color: #333;
+      font-weight: 600;
+    }
+
+    nav a:hover { color: #2563eb; }
+
+    /* Hero */
+    .hero {
+      background: url('https://images.unsplash.com/photo-1521335629791-ce4aec67dd47') center/cover no-repeat;
+      height: 60vh;
+      display: flex;
+      align-items: center;
+      padding: 40px;
+      color: #fff;
+    }
+
+    .hero h2 {
+      font-size: 3rem;
+      max-width: 500px;
+    }
+
+    /* Products */
+    .products {
+      padding: 50px 40px;
+    }
+
+    .products h2 {
+      margin-bottom: 30px;
+      font-size: 2rem;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 25px;
+    }
+
+    .card {
+      background: #fff;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+      transition: transform 0.2s;
+    }
+
+    .card:hover { transform: translateY(-5px); }
+
+    .card img {
+      width: 100%;
+      height: 280px;
+      object-fit: cover;
+    }
+
+    .card .info {
+      padding: 15px;
+    }
+
+    .info h3 { font-size: 1.1rem; margin-bottom: 8px; }
+
+    .price { font-weight: bold; margin-bottom: 10px; }
+
+    .info button {
+      width: 100%;
+      padding: 10px;
+      background: #2563eb;
+      border: none;
+      color: #fff;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    .info button:hover { background: #1e40af; }
+
+    /* Cart */
+    .cart {
+      position: fixed;
+      right: 20px;
+      bottom: 20px;
+      background: #111;
+      color: #fff;
+      padding: 15px 20px;
+      border-radius: 50px;
+      cursor: pointer;
+    }
+
+    footer {
+      background: #111;
+      color: #aaa;
+      text-align: center;
+      padding: 20px;
+      margin-top: 40px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header>
+    <h1>AJIO</h1>
+    <nav>
+      <a href="#">Men</a>
+      <a href="#">Women</a>
+      <a href="#">Kids</a>
+      <a href="#">Sale</a>
+    </nav>
+  </header>
+
+  <!-- Hero -->
+  <section class="hero">
+    <h2>Discover Trend-First Fashion</h2>
+  </section>
+
+  <!-- Products -->
+  <section class="products">
+    <h2>Featured Products</h2>
+    <div class="grid" id="productGrid"></div>
+  </section>
+
+  <!-- Cart -->
+  <div class="cart" id="cart">Cart (0)</div>
+
+  <footer>
+    <p>© 2025 AJIO-Style Demo | Educational Purpose</p>
+  </footer>
+
+  <!-- ===== JavaScript ===== -->
+  <script>
+    const products = [
+      { name: 'Men Casual Shirt', price: 1299, img: 'https://images.unsplash.com/photo-1617113930975-f9c7243ae527?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D' },
+      { name: 'Women Summer Dress', price: 1899, img: 'https://images.unsplash.com/photo-1584998316204-3b1e3b1895ae?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D' },
+      { name: 'Denim Jacket', price: 2499, img: 'https://images.unsplash.com/photo-1659421614911-e77b65eb368a?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D' },
+      { name: 'Sneakers', price: 2999, img: 'https://images.unsplash.com/photo-1608231387042-66d1773070a5?q=80&w=1074&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D' }
+    ];
+
+    const grid = document.getElementById('productGrid');
+    const cart = document.getElementById('cart');
+    let cartCount = 0;
+
+    products.forEach(p => {
+      const card = document.createElement('div');
+      card.className = 'card';
+      card.innerHTML = `
+        <img src="${p.img}" alt="${p.name}">
+        <div class="info">
+          <h3>${p.name}</h3>
+          <div class="price">₹${p.price}</div>
+          <button>Add to Cart</button>
+        </div>
+      `;
+
+      card.querySelector('button').onclick = () => {
+        cartCount++;
+        cart.textContent = `Cart (${cartCount})`;
+      };
+
+      grid.appendChild(card);
+    });
+  </script>
+
+</body>
+</html>
